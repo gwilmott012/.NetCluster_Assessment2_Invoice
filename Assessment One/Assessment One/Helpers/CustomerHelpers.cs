@@ -42,7 +42,7 @@ namespace Assessment_One.Helpers
         }
 
         /// <summary>
-        /// Filters passed in customers to only contain customers of the passed in name.
+        /// Filters passed in array to only contain customers of the passed in name.
         /// </summary>
         public static Customer[] FilterByName(Customer[] custArray, string name)
         {
@@ -60,7 +60,7 @@ namespace Assessment_One.Helpers
         }
 
         /// <summary>
-        /// Filters passed in customers to only contain customers of the passed in id.
+        /// Filters passed in array to only contain customers of the passed in id.
         /// </summary>
         public static Customer[] FilterByCustomerId(Customer[] custArray, int CustomerId)
         {
@@ -77,7 +77,23 @@ namespace Assessment_One.Helpers
             return filteredArray;
         }
 
+        /// <summary>
+        /// Filters passed in array to only contain customers not of the passed in id.
+        /// </summary>
+        public static Customer[] DeleteByCustomerId(Customer[] custArray, int CustomerId)
+        {
+            Customer[] filteredArray = new Customer[custArray.Length];
+            int filteredArrayPos = 0;
 
+            for (int i = 0; i < custArray.Length; i++)
+            {
+                if (custArray[i].Id != CustomerId)
+                {
+                    filteredArray[filteredArrayPos++] = custArray[i];
+                }
+            }
+            return filteredArray;
+        }
 
 
         /// <summary>

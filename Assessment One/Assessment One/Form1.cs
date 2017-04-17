@@ -151,11 +151,6 @@ namespace Assessment_One
                 Customer_Name = "Peter Smith",
                 Customer_Address = "49 High St"
             });
-
-            var FilteredArray = CustomerHelpers.FilterByName(customerStorage, "Maria");
-
-            int y = 0;
-
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)
