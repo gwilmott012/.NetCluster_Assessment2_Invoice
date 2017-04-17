@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assessment_One.DataEntities
 {
-    class Invoice
+    public class Invoice
     {
         public int Id { get; set; }
         public int Customer_Id { get; set; }
