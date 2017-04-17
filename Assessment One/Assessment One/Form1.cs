@@ -141,10 +141,8 @@ namespace Assessment_One
             customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 3, Customer_Name = "Helen",
                 Customer_Address = "21 Tall St" });
 
-            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 4, Customer_Name = "Ava",
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 4, Customer_Name = "Maria",
                 Customer_Address = "49 Windy St" });
-
-            var clonedCustArray = CustomerHelpers.Clone(customerStorage);
 
 
             customerStorage = CustomerHelpers.Add(customerStorage, new Customer()
@@ -153,6 +151,11 @@ namespace Assessment_One
                 Customer_Name = "Peter Smith",
                 Customer_Address = "49 High St"
             });
+
+            var FilteredArray = CustomerHelpers.FilterByName(customerStorage, "Maria");
+
+            int y = 0;
+
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)

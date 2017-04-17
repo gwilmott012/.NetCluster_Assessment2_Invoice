@@ -42,6 +42,45 @@ namespace Assessment_One.Helpers
         }
 
         /// <summary>
+        /// Filters passed in customers to only contain customers of the passed in name.
+        /// </summary>
+        public static Customer[] FilterByName(Customer[] custArray, string name)
+        {
+            Customer[] filteredArray = new Customer[custArray.Length];
+            int filteredArrayPos = 0;
+
+            for (int i = 0; i < custArray.Length; i++)
+            {
+                if (custArray[i].Customer_Name == name)
+                {
+                    filteredArray[filteredArrayPos++] = custArray[i];
+                }
+            }
+            return filteredArray;
+        }
+
+        /// <summary>
+        /// Filters passed in customers to only contain customers of the passed in id.
+        /// </summary>
+        public static Customer[] FilterByCustomerId(Customer[] custArray, int CustomerId)
+        {
+            Customer[] filteredArray = new Customer[custArray.Length];
+            int filteredArrayPos = 0;
+
+            for (int i = 0; i < custArray.Length; i++)
+            {
+                if (custArray[i].Id == CustomerId)
+                {
+                    filteredArray[filteredArrayPos++] = custArray[i];
+                }
+            }
+            return filteredArray;
+        }
+
+
+
+
+        /// <summary>
         /// Resizes passed in array adding 5 to the total value.
         /// </summary>
         private static Customer[] Resize(Customer[] custArray)
@@ -53,5 +92,8 @@ namespace Assessment_One.Helpers
             }
             return clonedArray;
         }
+
+
+
     }
 }
