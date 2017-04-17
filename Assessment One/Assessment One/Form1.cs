@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Assessment_One.DataEntities;
+using System.Collections;
+using Assessment_One.Helpers;
 
 namespace Assessment_One
 {
@@ -118,6 +120,8 @@ namespace Assessment_One
 
         private void InitializeInvoices()
         {
+            
+
             invoiceList.Add(new Invoice() { Id = 1, Customer_Id = 1, Costs = 23.5, Description = "Lots of stuff", Payment_Date = DateTime.Now.AddDays(14).Date });
             invoiceList.Add(new Invoice() { Id = 2, Customer_Id = 1, Costs = 200, Description = "Other things", Payment_Date = DateTime.Now.AddDays(12).Date });
             invoiceList.Add(new Invoice() { Id = 3, Customer_Id = 2, Costs = 1000, Description = "Fruit and things", Payment_Date = DateTime.Now.AddDays(7).Date });
@@ -126,10 +130,35 @@ namespace Assessment_One
 
         private void InitializeCustomers()
         {
-            customerList.Add(new Customer() { Id = 1, Customer_Name = "Bruce", Customer_Address = "12 Long St" });
-            customerList.Add(new Customer() { Id = 2, Customer_Name = "Maria", Customer_Address = "23 Short St" });
-            customerList.Add(new Customer() { Id = 3, Customer_Name = "Helen", Customer_Address = "21 Tall St" });
-            customerList.Add(new Customer() { Id = 4, Customer_Name = "Ava", Customer_Address = "49 Windy St" });
+
+            Customer[] customerStorage = new Customer[200];
+
+           
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 1, Customer_Name = "Bruce",
+                Customer_Address = "12 Long St" });
+
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 2, Customer_Name = "Maria",
+                Customer_Address = "23 Short St" });
+
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 3, Customer_Name = "Helen",
+                Customer_Address = "21 Tall St" });
+
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 4, Customer_Name = "Ava",
+                Customer_Address = "49 Windy St" });
+
+            var clonedCustArray = CustomerHelpers.Clone(customerStorage);
+
+
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer()
+            {
+                Id = 5,
+                Customer_Name = "Peter Smith",
+                Customer_Address = "49 High St"
+            });
+
+
+            int y = 2;
+
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)

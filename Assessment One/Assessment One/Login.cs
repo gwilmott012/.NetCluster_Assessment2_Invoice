@@ -15,6 +15,7 @@ namespace Assessment_One
         public Login()
         {
             InitializeComponent();
+            new Form1().Show();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
