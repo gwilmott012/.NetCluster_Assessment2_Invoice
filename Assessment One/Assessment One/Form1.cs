@@ -15,17 +15,28 @@ namespace Assessment_One
 {
     public partial class Form1 : Form
     {
+
+        //TODO replace the invoiceList with the invoiceStorage array
         List<Invoice> invoiceList = new List<Invoice>();
         List<Invoice> invoiceListBackup = new List<Invoice>();
 
+
+        //TODO replace the customerList with the customerStorage array
         List<Customer> customerList = new List<Customer>();
+
+
+
+        Customer[] customerStorage = new Customer[5];
+
+        Invoice[] invoiceStorage = new Invoice[5];
+
 
         int selected_customer_id;
         string selected_customer_Name;
 
         public Form1()
         {
-            InitializeComponent(); 
+            InitializeComponent();
         }
 
         private string GetNextCustomerId()
@@ -46,9 +57,9 @@ namespace Assessment_One
                 selected_customer_id = (int)customerGridView.Rows[e.RowIndex].Cells[0].Value;
                 selected_customer_Name = (string)customerGridView.Rows[e.RowIndex].Cells[1].Value;
 
-                FilterInvoicesForCustomer(selected_customer_id);
-
-                invoiceBindingSource.DataSource = invoiceList;
+                
+                Invoice[] filteredInvoices = InvoiceHelper.FilterByCustomerId(invoiceStorage, selected_customer_id);
+                invoiceGridView.DataSource = filteredInvoices;
 
                 lblInvoiceList.Text = "Invoices for " + selected_customer_Name;
                 lblNewInvoice.Text = "New invoice for " + selected_customer_Name;
@@ -78,26 +89,26 @@ namespace Assessment_One
         }
 
 
-        private void FilterInvoicesForCustomer(int customer_Id)
-        {
-            //First we need to back up invoiceList. This adds any new invoices to the backup.
-            BackupInvoices();
+        //private void FilterInvoicesForCustomer(int customer_Id)
+        //{
+        //    //First we need to back up invoiceList. This adds any new invoices to the backup.
+        //    BackupInvoices();
 
-            //Now we have to retore all the invoices from the backup to invoiceList so there is a complete list to filter.
-            RestoreInvoices();
+        //    //Now we have to retore all the invoices from the backup to invoiceList so there is a complete list to filter.
+        //    RestoreInvoices();
 
-            List<Invoice> tmpInvoiceList = new List<Invoice>();
+        //    List<Invoice> tmpInvoiceList = new List<Invoice>();
 
-            foreach (var invoice in invoiceList)
-            {
-                if (invoice.Customer_Id == customer_Id)
-                {
-                    tmpInvoiceList.Add(invoice);
-                }
-            }
+        //    foreach (var invoice in invoiceList)
+        //    {
+        //        if (invoice.Customer_Id == customer_Id)
+        //        {
+        //            tmpInvoiceList.Add(invoice);
+        //        }
+        //    }
 
-            invoiceList = tmpInvoiceList;
-        }
+        //    invoiceList = tmpInvoiceList;
+        //}
 
 
         private void Form1_Load(object sender, EventArgs e)
@@ -120,29 +131,76 @@ namespace Assessment_One
 
         private void InitializeInvoices()
         {
-            
+            invoiceStorage = InvoiceHelper.Add(invoiceStorage, new Invoice()
+            {
+                Id = 1,
+                Customer_Id = 1,
+                Costs = 23.5,
+                Description = "Lots of stuff",
+                Payment_Date = DateTime.Now.AddDays(14).Date
+            });
 
-            invoiceList.Add(new Invoice() { Id = 1, Customer_Id = 1, Costs = 23.5, Description = "Lots of stuff", Payment_Date = DateTime.Now.AddDays(14).Date });
-            invoiceList.Add(new Invoice() { Id = 2, Customer_Id = 1, Costs = 200, Description = "Other things", Payment_Date = DateTime.Now.AddDays(12).Date });
-            invoiceList.Add(new Invoice() { Id = 3, Customer_Id = 2, Costs = 1000, Description = "Fruit and things", Payment_Date = DateTime.Now.AddDays(7).Date });
-            invoiceList.Add(new Invoice() { Id = 4, Customer_Id = 3, Costs = 2000, Description = "Clothes and other boring stuff", Payment_Date = DateTime.Now.AddDays(3).Date });
+            invoiceStorage = InvoiceHelper.Add(invoiceStorage, new Invoice()
+            {
+                Id = 2,
+                Customer_Id = 1,
+                Costs = 200,
+                Description = "Other things",
+                Payment_Date = DateTime.Now.AddDays(12).Date
+            });
+
+            invoiceStorage = InvoiceHelper.Add(invoiceStorage, new Invoice()
+            {
+                Id = 3,
+                Customer_Id = 2,
+                Costs = 1000,
+                Description = "Fruit and things",
+                Payment_Date = DateTime.Now.AddDays(7).Date
+            });
+
+            invoiceStorage = InvoiceHelper.Add(invoiceStorage, new Invoice()
+            {
+                Id = 4,
+                Customer_Id = 3,
+                Costs = 2000,
+                Description = "Clothes and other boring stuff",
+                Payment_Date = DateTime.Now.AddDays(3).Date
+            });
+
+            invoiceGridView.DataSource = invoiceStorage;
         }
 
         private void InitializeCustomers()
         {
-            Customer[] customerStorage = new Customer[5];
 
-            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 1, Customer_Name = "Bruce",
-                Customer_Address = "12 Long St" });
 
-            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 2, Customer_Name = "Maria",
-                Customer_Address = "23 Short St" });
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer()
+            {
+                Id = 1,
+                Customer_Name = "Bruce",
+                Customer_Address = "12 Long St"
+            });
 
-            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 3, Customer_Name = "Helen",
-                Customer_Address = "21 Tall St" });
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer()
+            {
+                Id = 2,
+                Customer_Name = "Maria",
+                Customer_Address = "23 Short St"
+            });
 
-            customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 4, Customer_Name = "Maria",
-                Customer_Address = "49 Windy St" });
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer()
+            {
+                Id = 3,
+                Customer_Name = "Helen",
+                Customer_Address = "21 Tall St"
+            });
+
+            customerStorage = CustomerHelpers.Add(customerStorage, new Customer()
+            {
+                Id = 4,
+                Customer_Name = "Maria",
+                Customer_Address = "49 Windy St"
+            });
 
 
             customerStorage = CustomerHelpers.Add(customerStorage, new Customer()
@@ -154,8 +212,6 @@ namespace Assessment_One
 
 
             this.customerGridView.DataSource = customerStorage;
-
-
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)
@@ -190,7 +246,7 @@ namespace Assessment_One
 
         private void btnAddInvoice_Click(object sender, EventArgs e)
         {
-  
+
 
             int invoice_id = 0;
             bool stringToIntConversionSuccess = false;
@@ -198,7 +254,7 @@ namespace Assessment_One
 
             double invoice_cost = 0;
             bool stringToDoubleConversionSuccess = false;
-            stringToDoubleConversionSuccess = double.TryParse(txtCost.Text.Replace("$",""), out invoice_cost);
+            stringToDoubleConversionSuccess = double.TryParse(txtCost.Text.Replace("$", ""), out invoice_cost);
 
             if (stringToDoubleConversionSuccess == false || string.IsNullOrEmpty(txtInvoiceDescription.Text))
             {
@@ -207,7 +263,8 @@ namespace Assessment_One
                 if (stringToDoubleConversionSuccess == false && string.IsNullOrEmpty(txtInvoiceDescription.Text))
                 {
                     message = "Please enter a Description and a Cost";
-                } else if (string.IsNullOrEmpty(txtInvoiceDescription.Text))
+                }
+                else if (string.IsNullOrEmpty(txtInvoiceDescription.Text))
                 {
                     message = "Please enter a Description";
                 }
@@ -222,11 +279,11 @@ namespace Assessment_One
 
             if (stringToIntConversionSuccess == true && stringToDoubleConversionSuccess == true)
             {
-               invoiceBindingSource.Add(new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value});  
+                invoiceBindingSource.Add(new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value });
             }
             txtCost.Text = "$";
             txtInvoiceDescription.Text = "";
-            txtInvoiceId.Text = (invoice_id+1).ToString();
+            txtInvoiceId.Text = (invoice_id + 1).ToString();
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < custArray.Length; i++)
             {
-                if (custArray[i].Customer_Name == name)
+                if (custArray[i] != null && custArray[i].Customer_Name == name)
                 {
                     filteredArray[filteredArrayPos++] = custArray[i];
                 }
@@ -69,7 +69,7 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < custArray.Length; i++)
             {
-                if (custArray[i].Id == CustomerId)
+                if (custArray[i] != null && custArray[i].Id == CustomerId)
                 {
                     filteredArray[filteredArrayPos++] = custArray[i];
                 }
@@ -87,7 +87,7 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < custArray.Length; i++)
             {
-                if (custArray[i].Id != CustomerId)
+                if (custArray[i] != null && custArray[i].Id != CustomerId)
                 {
                     filteredArray[filteredArrayPos++] = custArray[i];
                 }
@@ -104,7 +104,7 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < custArray.Length; i++)
             {
-                if (custArray[i].Id == customer.Id)
+                if (custArray[i] != null && custArray[i].Id == customer.Id)
                 {
                     custArray[i] = customer;
                 }

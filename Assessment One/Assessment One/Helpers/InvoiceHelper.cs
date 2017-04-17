@@ -51,7 +51,7 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < invArray.Length; i++)
             {
-                if (invArray[i].Id == InvoiceId)
+                if (invArray[i] != null && invArray[i].Id == InvoiceId)
                 {
                     filteredArray[filteredArrayPos++] = invArray[i];
                 }
@@ -60,7 +60,7 @@ namespace Assessment_One.Helpers
         }
 
         /// <summary>
-        /// Filters passed in array to only contain customers of the passed in id.
+        /// Filters passed in array to only contain invoices for the customer of the passed in id.
         /// </summary>
         public static Invoice[] FilterByCustomerId(Invoice[] invArray, int CustomerId)
         {
@@ -69,7 +69,7 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < invArray.Length; i++)
             {
-                if (invArray[i].Customer_Id == CustomerId)
+                if (invArray[i] != null && invArray[i].Customer_Id == CustomerId )
                 {
                     filteredArray[filteredArrayPos++] = invArray[i];
                 }
@@ -87,7 +87,7 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < invArray.Length; i++)
             {
-                if (invArray[i].Id != InvoiceId)
+                if (invArray[i] != null && invArray[i].Id != InvoiceId)
                 {
                     filteredArray[filteredArrayPos++] = invArray[i];
                 }
@@ -104,7 +104,7 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < invArray.Length; i++)
             {
-                if (invArray[i].Id == invoice.Id)
+                if (invArray[i] != null && invArray[i].Id == invoice.Id)
                 {
                     invArray[i] = invoice;
                 }
