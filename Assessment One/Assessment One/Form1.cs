@@ -151,6 +151,12 @@ namespace Assessment_One
                 Customer_Name = "Peter Smith",
                 Customer_Address = "49 High St"
             });
+
+            var updatedArray = CustomerHelpers.UpdateByCustomerId(customerStorage, new Customer() {
+                Id = 3, Customer_Name = "Hellen",
+                Customer_Address = "21 Long St" });
+
+            int y = 0;
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)

@@ -95,6 +95,22 @@ namespace Assessment_One.Helpers
             return filteredArray;
         }
 
+        /// <summary>
+        /// Updates passed in array to details of passed in customer by id.
+        /// </summary>
+        public static Customer[] UpdateByCustomerId(Customer[] custArray, Customer customer)
+        {
+            Customer[] newArray = new Customer[custArray.Length];
+
+            for (int i = 0; i < custArray.Length; i++)
+            {
+                if (custArray[i].Id == customer.Id)
+                {
+                    custArray[i] = customer;
+                }
+            }
+            return custArray;
+        }
 
         /// <summary>
         /// Resizes passed in array adding 5 to the total value.
