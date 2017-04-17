@@ -130,10 +130,8 @@ namespace Assessment_One
 
         private void InitializeCustomers()
         {
+            Customer[] customerStorage = new Customer[5];
 
-            Customer[] customerStorage = new Customer[200];
-
-           
             customerStorage = CustomerHelpers.Add(customerStorage, new Customer() { Id = 1, Customer_Name = "Bruce",
                 Customer_Address = "12 Long St" });
 
@@ -155,10 +153,6 @@ namespace Assessment_One
                 Customer_Name = "Peter Smith",
                 Customer_Address = "49 High St"
             });
-
-
-            int y = 2;
-
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)
