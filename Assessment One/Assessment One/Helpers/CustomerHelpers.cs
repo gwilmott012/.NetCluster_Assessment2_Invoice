@@ -9,12 +9,28 @@ namespace Assessment_One.Helpers
 {
     public static class CustomerHelpers
     {
-        private static int resizeAmount = 5;
+        private static int resizeAmount = 1;
+
+        /// <summary>
+        /// Adds a new customer or updates an existing customer
+        /// </summary>
+        public static Customer[] AddOrUpdate(Customer[] custArray, Customer customer)
+        {
+            if (CustomerExists(custArray, customer))
+            {
+                custArray = Update( custArray, customer);
+            }
+            else
+            {
+                custArray = Add(custArray, customer);
+            }
+            return custArray;
+        }
 
         /// <summary>
         /// Adds passed in customer to array and if there is no space in array calls resize adding more spaces in array.
         /// </summary>
-        public static Customer[] Add(Customer[] custArray, Customer customer)
+        private static Customer[] Add(Customer[] custArray, Customer customer)
         {
             int nextFreeSpot = ArrayHelpers.GetNextFreeSpotInArray(custArray);
 
@@ -27,7 +43,43 @@ namespace Assessment_One.Helpers
             custArray[nextFreeSpot] = customer;
             return custArray;
         }
-        
+
+
+        /// <summary>
+        /// Adds passed in customer to array and if there is no space in array calls resize adding more spaces in array.
+        /// </summary>
+        private static Customer[] Update(Customer[] custArray, Customer customer)
+        {
+            for (int i = 0; i < custArray.Length; i++)
+            {
+                if (custArray[i] != null && custArray[i].Id == customer.Id)
+                {
+                    custArray[i] = customer;
+                }
+            }
+
+            return custArray;
+        }
+
+        /// <summary>
+        /// Checks to see if a customer is already in the array.
+        /// </summary>
+        private static bool CustomerExists(Customer[] custArray, Customer customer)
+        {
+            for (int i = 0; i < custArray.Length; i++)
+            {
+                if (custArray[i] != null && custArray[i].Id  == customer.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+
+
         /// <summary>
         /// Clones passed in array to a backup array.
         /// </summary>
@@ -51,12 +103,12 @@ namespace Assessment_One.Helpers
 
             for (int i = 0; i < custArray.Length; i++)
             {
-                if (custArray[i] != null && custArray[i].Customer_Name == name)
+                if (custArray[i] != null && custArray[i].Customer_Name.ToLower() == name.ToLower())
                 {
                     filteredArray[filteredArrayPos++] = custArray[i];
                 }
             }
-            return filteredArray;
+            return TrimArray(filteredArray);
         }
 
         /// <summary>
@@ -74,7 +126,7 @@ namespace Assessment_One.Helpers
                     filteredArray[filteredArrayPos++] = custArray[i];
                 }
             }
-            return filteredArray;
+            return TrimArray(filteredArray);
         }
 
         /// <summary>
@@ -92,7 +144,7 @@ namespace Assessment_One.Helpers
                     filteredArray[filteredArrayPos++] = custArray[i];
                 }
             }
-            return filteredArray;
+            return TrimArray(filteredArray);
         }
 
         /// <summary>
@@ -112,8 +164,45 @@ namespace Assessment_One.Helpers
             return custArray;
         }
 
+
+        public static int GetNextId(Customer[] custArray)
+        {
+            int highestID = 0;
+
+            for (int i = 0; i < custArray.Length; i++)
+            {
+                if (custArray[i] != null && custArray[i].Id > highestID)
+                {
+                    highestID = custArray[i].Id;
+                }
+            }
+
+            return highestID + 1;
+        }
+
+        private static Customer[] TrimArray(Customer[] custArray)
+        {
+            int counter = 0;
+            int numberOfElemets = ArrayHelpers.NumberOfElementsInArray(custArray);
+            Customer[] trimmedArray = new Customer[numberOfElemets];
+
+            for (int i = 0; i < custArray.Length; i++)
+            {
+                if (custArray[i] != null)
+                {
+                    trimmedArray[counter++] = custArray[i];
+                }
+            }
+
+            return trimmedArray;
+        }
+
+
+        
+
+
         /// <summary>
-        /// Resizes passed in array adding 5 to the total value.
+        /// Resizes passed in array adding 1 to the total value.
         /// </summary>
         private static Customer[] Resize(Customer[] custArray)
         {

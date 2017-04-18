@@ -9,7 +9,7 @@ namespace Assessment_One.Helpers
 {
     public static class InvoiceHelper
     {
-        private static int resizeAmount = 5;
+        private static int resizeAmount = 1;
 
         /// <summary>
         /// Adds passed in invoice to array and if there is no space in array calls resize adding more spaces in array.
@@ -41,6 +41,25 @@ namespace Assessment_One.Helpers
             return clonedArray;
         }
 
+
+        private static Invoice[] TrimArray(Invoice[] invArray)
+        {
+            int counter = 0;
+            int numberOfElemets = ArrayHelpers.NumberOfElementsInArray(invArray);
+            Invoice[] trimmedArray = new Invoice[numberOfElemets];
+
+            for (int i = 0; i < invArray.Length; i++)
+            {
+                if (invArray[i] != null)
+                {
+                    trimmedArray[counter++] = invArray[i];
+                }
+            }
+
+            return trimmedArray;
+        }
+
+
         /// <summary>
         /// Filters passed in array to only contain invoices of the passed in id.
         /// </summary>
@@ -56,7 +75,7 @@ namespace Assessment_One.Helpers
                     filteredArray[filteredArrayPos++] = invArray[i];
                 }
             }
-            return filteredArray;
+            return TrimArray(filteredArray);
         }
 
         /// <summary>
@@ -74,7 +93,7 @@ namespace Assessment_One.Helpers
                     filteredArray[filteredArrayPos++] = invArray[i];
                 }
             }
-            return filteredArray;
+            return TrimArray(filteredArray);
         }
 
         /// <summary>
@@ -92,7 +111,7 @@ namespace Assessment_One.Helpers
                     filteredArray[filteredArrayPos++] = invArray[i];
                 }
             }
-            return filteredArray;
+            return TrimArray(filteredArray);
         }
 
         /// <summary>
@@ -112,8 +131,23 @@ namespace Assessment_One.Helpers
             return invArray;
         }
 
+        public static int GetNextId(Invoice[] invArray)
+        {
+            int highestID = 0;
+
+            for (int i = 0; i < invArray.Length; i++)
+            {
+                if (invArray[i] != null && invArray[i].Id > highestID)
+                {
+                    highestID = invArray[i].Id;
+                }
+            }
+
+            return highestID + 1;
+        }
+
         /// <summary>
-        /// Resizes passed in array adding 5 to the total value.
+        /// Resizes passed in array adding 1 to the total value.
         /// </summary>
         private static Invoice[] Resize(Invoice[] invArray)
         {

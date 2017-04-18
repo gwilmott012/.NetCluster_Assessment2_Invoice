@@ -24,5 +24,20 @@ namespace Assessment_One.Helpers
             }
             return -1;
         }
+
+
+        public static int NumberOfElementsInArray(object[] objArray)
+        {
+
+            for (int i = 0; i < objArray.Length; i++)
+            {
+                if (objArray[i] == null)
+                {
+                    return i;
+                }
+            }
+
+            return 1;
+        }
     }
 }
