@@ -66,14 +66,14 @@
             this.txtPass.Name = "txtPass";
             this.txtPass.PasswordChar = '*';
             this.txtPass.Size = new System.Drawing.Size(165, 20);
-            this.txtPass.TabIndex = 1;
+            this.txtPass.TabIndex = 2;
             // 
             // btnLogin
             // 
             this.btnLogin.Location = new System.Drawing.Point(276, 148);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(75, 23);
-            this.btnLogin.TabIndex = 2;
+            this.btnLogin.TabIndex = 3;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);

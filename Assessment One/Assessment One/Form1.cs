@@ -41,6 +41,7 @@ namespace Assessment_One
             }
             else if (customerGridView.Columns[e.ColumnIndex].Name == "Edit")
             {
+
                 txtCustomerId.Text = customerGridView.Rows[e.RowIndex].Cells[0].Value.ToString();
                 txtCustomerName.Text = customerGridView.Rows[e.RowIndex].Cells[1].Value.ToString();
                 txtCustomerAddress.Text = customerGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
@@ -80,7 +81,7 @@ namespace Assessment_One
 
         private void InitializeInvoices()
         {
-            invoiceStorage = InvoiceHelper.Add(invoiceStorage, new Invoice()
+            invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage, new Invoice()
             {
                 Id = 1,
                 Customer_Id = 1,
@@ -89,7 +90,7 @@ namespace Assessment_One
                 Payment_Date = DateTime.Now.AddDays(14).Date
             });
 
-            invoiceStorage = InvoiceHelper.Add(invoiceStorage, new Invoice()
+            invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage, new Invoice()
             {
                 Id = 2,
                 Customer_Id = 1,
@@ -98,7 +99,7 @@ namespace Assessment_One
                 Payment_Date = DateTime.Now.AddDays(12).Date
             });
 
-            invoiceStorage = InvoiceHelper.Add(invoiceStorage, new Invoice()
+            invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage, new Invoice()
             {
                 Id = 3,
                 Customer_Id = 2,
@@ -107,7 +108,7 @@ namespace Assessment_One
                 Payment_Date = DateTime.Now.AddDays(7).Date
             });
 
-            invoiceStorage = InvoiceHelper.Add(invoiceStorage, new Invoice()
+            invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage, new Invoice()
             {
                 Id = 4,
                 Customer_Id = 3,
@@ -116,7 +117,7 @@ namespace Assessment_One
                 Payment_Date = DateTime.Now.AddDays(3).Date
             });
 
-            invoiceGridView.DataSource = invoiceStorage;
+           // invoiceGridView.DataSource = invoiceStorage;
         }
 
         private void InitializeCustomers()
@@ -243,14 +244,22 @@ namespace Assessment_One
 
             if (stringToIntConversionSuccess == true && stringToDoubleConversionSuccess == true)
             {
-                invoiceStorage = InvoiceHelper.Add(invoiceStorage ,new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value });
+                invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage ,new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value });
             }
             txtCost.Text = "$";
             txtInvoiceDescription.Text = "";
-            txtInvoiceId.Text = (invoice_id + 1).ToString();
+            //txtInvoiceId.Text = (invoice_id + 1).ToString();
 
             //invoiceGridView.DataSource = invoiceStorage;
+
+            //customerGridView.DataSource = customerBindingSource.DataSource;
+            //customerGridView.DataSource = customerStorage;
+
             ViewInvoicesForCustomer();
+
+            txtInvoiceId.Text = InvoiceHelper.GetNextId(invoiceStorage).ToString();
+
+            btnAddInvoice.Text = "Add";
         }
 
        
@@ -345,6 +354,20 @@ namespace Assessment_One
             
 
             
+        }
+
+        private void invoiceGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (invoiceGridView.Columns[e.ColumnIndex].Name == "EditInvoice")
+            {
+
+                txtInvoiceId.Text = invoiceGridView.Rows[e.RowIndex].Cells[0].Value.ToString();                
+                txtInvoiceDescription.Text = invoiceGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
+                txtCost.Text = invoiceGridView.Rows[e.RowIndex].Cells[3].Value.ToString();
+                dtpInvoiceDate.Value = (DateTime)invoiceGridView.Rows[e.RowIndex].Cells[4].Value;
+                btnAddInvoice.Text = "Update";
+                btnAddInvoice.Enabled = true;
+            }
         }
     }
 }

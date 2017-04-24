@@ -12,9 +12,25 @@ namespace Assessment_One.Helpers
         private static int resizeAmount = 1;
 
         /// <summary>
+        /// Adds a new invoice or updates an existing invoice.
+        /// </summary>
+        public static Invoice[] AddOrUpdate(Invoice[] invArray, Invoice invoice)
+        {
+            if (InvoiceExists(invArray, invoice))
+            {
+                invArray = Update(invArray, invoice);
+            }
+            else
+            {
+                invArray = Add(invArray, invoice);
+            }
+            return invArray;
+        }
+
+        /// <summary>
         /// Adds passed in invoice to array and if there is no space in array calls resize adding more spaces in array.
         /// </summary>
-        public static Invoice[] Add(Invoice[] invArray, Invoice invoice)
+        private static Invoice[] Add(Invoice[] invArray, Invoice invoice)
         {
             int nextFreeSpot = ArrayHelpers.GetNextFreeSpotInArray(invArray);
 
@@ -26,6 +42,38 @@ namespace Assessment_One.Helpers
 
             invArray[nextFreeSpot] = invoice;
             return invArray;
+        }
+
+        /// <summary>
+        /// Adds passed in invoice to array and if there is no space in array calls resize adding more spaces in array.
+        /// </summary>
+        private static Invoice[] Update(Invoice[] invArray, Invoice invoice)
+        {
+            for (int i = 0; i < invArray.Length; i++)
+            {
+                if (invArray[i] != null && invArray[i].Id == invoice.Id)
+                {
+                    invArray[i] = invoice;
+                }
+            }
+
+            return invArray;
+        }
+
+        /// <summary>
+        /// Checks to see if a invoice is already in the array.
+        /// </summary>
+        private static bool InvoiceExists(Invoice[] invArray, Invoice invoice)
+        {
+            for (int i = 0; i < invArray.Length; i++)
+            {
+                if (invArray[i] != null && invArray[i].Id == invoice.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

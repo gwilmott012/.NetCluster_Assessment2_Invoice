@@ -15,18 +15,23 @@ namespace Assessment_One
         public Login()
         {
             InitializeComponent();
-            new Form1().Show();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (txtUser.Text=="lister" && txtPass.Text=="1472")
+            if (txtUser.Text == "lister" && txtPass.Text == "1472")
             {
+                MessageBox.Show("Welcome");
+                this.Hide();
                 new Form1().Show();
+
             }
-            else if (txtUser.Text=="" || txtPass.Text=="")
+            else
             {
-                MessageBox.Show("Please enter a value");
+                string message = "Try again";
+                MessageBox.Show(message);
+                txtUser.Text = string.Empty;
+                txtPass.Text = string.Empty;
             }
         }
     }
