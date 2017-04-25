@@ -21,7 +21,6 @@ namespace Assessment_One
         {
             if (txtUser.Text == "lister" && txtPass.Text == "1472")
             {
-                MessageBox.Show("Welcome");
                 this.Hide();
                 new Form1().Show();
 
@@ -29,7 +28,7 @@ namespace Assessment_One
             else
             {
                 string message = "Try again";
-                MessageBox.Show(message);
+                MessageBox.Show(message, "Input Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtUser.Text = string.Empty;
                 txtPass.Text = string.Empty;
             }

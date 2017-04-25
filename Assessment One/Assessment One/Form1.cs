@@ -283,7 +283,10 @@ namespace Assessment_One
 
         private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            if (MessageBox.Show("Are you sure you want to exit?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                Application.Exit();
+            }            
         }
 
 
@@ -293,7 +296,7 @@ namespace Assessment_One
 
             if (customerSearchText == string.Empty)
             {
-                MessageBox.Show("You knobhead enter a name");
+                MessageBox.Show("Please search a valid customer");
             }
             else
             {
@@ -368,6 +371,11 @@ namespace Assessment_One
                 btnAddInvoice.Text = "Update";
                 btnAddInvoice.Enabled = true;
             }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
