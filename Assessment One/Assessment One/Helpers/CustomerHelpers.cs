@@ -1,4 +1,5 @@
-﻿using Assessment_One.DataEntities;
+﻿using InvoiceDAL.Models;
+using InvoiceDAL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,19 @@ namespace Assessment_One.Helpers
 {
     public static class CustomerHelpers
     {
+
+
+
+
+
+
+
+
+
+
+
+
+
         private static int resizeAmount = 1;
 
         /// <summary>

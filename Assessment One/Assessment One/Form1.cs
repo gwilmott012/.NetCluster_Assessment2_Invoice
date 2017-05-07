@@ -1,5 +1,7 @@
-﻿using Assessment_One.DataEntities;
+﻿
 using Assessment_One.Helpers;
+using InvoiceDAL.Models;
+using InvoiceDAL.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -123,48 +125,9 @@ namespace Assessment_One
         private void InitializeCustomers()
         {
 
-
-            customerStorage = CustomerHelpers.AddOrUpdate(customerStorage, new Customer()
-            {
-                Id = 1,
-                Customer_Name = "Bruce",
-                Customer_Address = "12 Long St"
-            });
-
-            customerStorage = CustomerHelpers.AddOrUpdate(customerStorage, new Customer()
-            {
-                Id = 2,
-                Customer_Name = "Martha",
-                Customer_Address = "23 Short St"
-            });
-
-            customerStorage = CustomerHelpers.AddOrUpdate(customerStorage, new Customer()
-            {
-                Id = 3,
-                Customer_Name = "Helen",
-                Customer_Address = "21 Tall St"
-            });
-
-            customerStorage = CustomerHelpers.AddOrUpdate(customerStorage, new Customer()
-            {
-                Id = 4,
-                Customer_Name = "Maria",
-                Customer_Address = "49 Windy St"
-            });
-
-
-            customerStorage = CustomerHelpers.AddOrUpdate(customerStorage, new Customer()
-            {
-                Id = 5,
-                Customer_Name = "Peter Smith",
-                Customer_Address = "49 High St"
-            });
-
-
-         
-
-
-           customerGridView.DataSource = customerStorage;
+            ICustomerService customerService = new CustomerService();
+            List<Customer> customerList = customerService.GetCustomers();
+            customerGridView.DataSource = customerList;
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)

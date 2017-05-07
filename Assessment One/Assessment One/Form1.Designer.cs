@@ -419,11 +419,11 @@
             // 
             // invoiceBindingSource
             // 
-            this.invoiceBindingSource.DataSource = typeof(Assessment_One.DataEntities.Invoice);
+            this.invoiceBindingSource.DataSource = typeof(InvoiceDAL.Models.Invoice);
             // 
             // customerBindingSource
             // 
-            this.customerBindingSource.DataSource = typeof(Assessment_One.DataEntities.Customer);
+            this.customerBindingSource.DataSource = typeof(InvoiceDAL.Models.Customer);
             // 
             // idDataGridViewTextBoxColumn
             // 

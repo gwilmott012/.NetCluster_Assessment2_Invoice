@@ -1,4 +1,4 @@
-﻿using Assessment_One.DataEntities;
+﻿using InvoiceDAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

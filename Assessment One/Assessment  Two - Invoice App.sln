@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assessment One", "Assessment One\Assessment One.csproj", "{75E1818A-B189-4BB1-AF81-A243EA0DB070}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assessment Two - Invoice App", "Assessment One\Assessment Two - Invoice App.csproj", "{75E1818A-B189-4BB1-AF81-A243EA0DB070}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceDAL", "InvoiceDAL\InvoiceDAL.csproj", "{6F29C8D1-A4C0-4A45-8B0B-3AAA85611B54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{75E1818A-B189-4BB1-AF81-A243EA0DB070}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75E1818A-B189-4BB1-AF81-A243EA0DB070}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75E1818A-B189-4BB1-AF81-A243EA0DB070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F29C8D1-A4C0-4A45-8B0B-3AAA85611B54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F29C8D1-A4C0-4A45-8B0B-3AAA85611B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F29C8D1-A4C0-4A45-8B0B-3AAA85611B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F29C8D1-A4C0-4A45-8B0B-3AAA85611B54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
