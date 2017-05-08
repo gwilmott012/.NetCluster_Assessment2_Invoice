@@ -11,7 +11,12 @@ namespace InvoiceDAL.Services
     public class InvoiceService : IInvoiceService
     {
 
-        string connectionString = ConfigurationManager.ConnectionStrings["InvoiceConnection"].ConnectionString.ToString();
+        string connectionString;
+
+        public InvoiceService()
+        {
+            connectionString = ConfigurationManager.ConnectionStrings["InvoiceConnection"].ConnectionString.ToString();
+        }
 
         public List<Invoice> CreateInvoice(Invoice invoice)
         {

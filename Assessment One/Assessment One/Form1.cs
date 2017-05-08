@@ -73,7 +73,7 @@ namespace Assessment_One
             InitializeInvoices();
 
 
-            txtCustomerId.Text = CustomerHelpers.GetNextId(customerStorage).ToString();
+            //txtCustomerId.Text = CustomerHelpers.GetNextId(customerStorage).ToString();
 
             txtInvoiceId.Text = InvoiceHelper.GetNextId(invoiceStorage).ToString();
 
@@ -136,6 +136,8 @@ namespace Assessment_One
             int.TryParse(txtCustomerId.Text, out customer_id);
 
 
+
+
             if (string.IsNullOrEmpty(txtCustomerName.Text) || string.IsNullOrEmpty(txtCustomerAddress.Text))
             {
                 string message = "Please enter an Address";
@@ -153,20 +155,16 @@ namespace Assessment_One
                 return;
             }
 
-            //customerBindingSource.Add(new Customer() { Id = customer_id, Customer_Name = txtCustomerName.Text, Customer_Address = txtCustomerAddress.Text });
-            customerStorage = CustomerHelpers.AddOrUpdate(customerStorage, new Customer()
-            {
-                Id = customer_id,
-                Customer_Name = txtCustomerName.Text,
-                Customer_Address = txtCustomerAddress.Text
-            });
 
-            customerGridView.DataSource = customerBindingSource.DataSource;
-            customerGridView.DataSource = customerStorage;
-            
+            Customer customer = new Customer() { Id = customer_id, Customer_Name = txtCustomerName.Text, Customer_Address = txtCustomerAddress.Text };
+            ICustomerService customerService = new CustomerService();
+            List<Customer> customerList = customerService.CreateOrUpdateCustomer(customer);
+            customerGridView.DataSource = customerList;
+
+
             txtCustomerName.Text = "";
             txtCustomerAddress.Text = "";
-            txtCustomerId.Text = CustomerHelpers.GetNextId(customerStorage).ToString();
+            txtCustomerId.Text = "";
 
             btnAddCustomer.Text = "Add";
         }
@@ -263,8 +261,13 @@ namespace Assessment_One
             }
             else
             {
-                Customer[] filteredCustomers = CustomerHelpers.FilterByName(customerStorage, customerSearchText);
-                FilteredCustomers(filteredCustomers);
+                //Customer[] filteredCustomers = CustomerHelpers.FilterByName(customerStorage, customerSearchText);
+                //FilteredCustomers(filteredCustomers);
+
+                ICustomerService customerService = new CustomerService();
+                List<Customer> customerList = customerService.GetCustomer(customerSearchText);
+                customerGridView.DataSource = customerList;
+
             }
         }
 

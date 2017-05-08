@@ -16,7 +16,7 @@ namespace InvoiceDAL.Services
         int GetNumberOfCustomers();
         int GetMaxCustomerId();
         List<Customer> CustomerExists(Customer customer);
-        List<Customer> CreateCustomer(Customer customer);
+        List<Customer> CreateOrUpdateCustomer(Customer customer);
         List<Customer> GetCustomer(string customerName);
     }
 }
