@@ -123,7 +123,12 @@ namespace InvoiceDAL.Services
                     // write each record
                     while (reader.Read())
                     {
-                        returnList.Add(new Customer { Id = (int)reader["Id"], Customer_Address = (string)reader["Address"], Customer_Name = (string)reader["Name"] });
+                        returnList.Add(new Customer
+                        {
+                            Id = (int)reader["Id"],
+                            Customer_Address = (string)reader["Address"],
+                            Customer_Name = (string)reader["Name"]
+                        });
                     }
 
                 }

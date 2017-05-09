@@ -54,10 +54,9 @@ namespace Assessment_One
 
         private void ViewInvoicesForCustomer()
         {
-            Invoice[] filteredInvoices = InvoiceHelper.FilterByCustomerId(invoiceStorage, selected_customer_id);
-            invoiceGridView.DataSource = filteredInvoices;
-
-            UpdateInvoiceLabels();
+            IInvoiceService invoiceService = new InvoiceService();
+            List<Invoice> invoiceList = invoiceService.GetCustomerInvoices(selected_customer_id);
+            invoiceGridView.DataSource = invoiceList;
         }
 
         private void UpdateInvoiceLabels()
@@ -83,43 +82,7 @@ namespace Assessment_One
 
         private void InitializeInvoices()
         {
-            invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage, new Invoice()
-            {
-                Id = 1,
-                Customer_Id = 1,
-                Costs = 23.5,
-                Description = "Lots of stuff",
-                Payment_Date = DateTime.Now.AddDays(14).Date
-            });
-
-            invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage, new Invoice()
-            {
-                Id = 2,
-                Customer_Id = 1,
-                Costs = 200,
-                Description = "Other things",
-                Payment_Date = DateTime.Now.AddDays(12).Date
-            });
-
-            invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage, new Invoice()
-            {
-                Id = 3,
-                Customer_Id = 2,
-                Costs = 1000,
-                Description = "Fruit and things",
-                Payment_Date = DateTime.Now.AddDays(7).Date
-            });
-
-            invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage, new Invoice()
-            {
-                Id = 4,
-                Customer_Id = 3,
-                Costs = 2000,
-                Description = "Clothes and other boring stuff",
-                Payment_Date = DateTime.Now.AddDays(3).Date
-            });
-
-           // invoiceGridView.DataSource = invoiceStorage;
+            
         }
 
         private void InitializeCustomers()
