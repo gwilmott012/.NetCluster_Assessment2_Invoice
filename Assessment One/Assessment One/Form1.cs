@@ -15,14 +15,16 @@ namespace Assessment_One
 
 
         //Arrays to store Customers and Invoices
-        Customer[] customerStorage = new Customer[1];
-        Invoice[] invoiceStorage = new Invoice[1];
+        //Customer[] customerStorage = new Customer[1];
+        //Invoice[] invoiceStorage = new Invoice[1];
 
 
         //Key varibales for searching
         int selected_customer_id;
         string selected_customer_Name;
         int invoice_id;
+        IInvoiceService invoiceService = new InvoiceService();
+        ICustomerService customerService = new CustomerService();
 
 
         public Form1()
@@ -54,7 +56,7 @@ namespace Assessment_One
 
         private void ViewInvoicesForCustomer()
         {
-            IInvoiceService invoiceService = new InvoiceService();
+
             List<Invoice> invoiceList = invoiceService.GetCustomerInvoices(selected_customer_id);
             invoiceGridView.DataSource = invoiceList;
         }
@@ -74,7 +76,7 @@ namespace Assessment_One
 
             //txtCustomerId.Text = CustomerHelpers.GetNextId(customerStorage).ToString();
 
-            txtInvoiceId.Text = InvoiceHelper.GetNextId(invoiceStorage).ToString();
+            txtInvoiceId.Text = invoiceService.GetMaxInvoiceId().ToString();
 
             dtpInvoiceDate.Value = DateTime.Now.AddDays(14).Date;
 
@@ -87,8 +89,6 @@ namespace Assessment_One
 
         private void InitializeCustomers()
         {
-
-            ICustomerService customerService = new CustomerService();
             List<Customer> customerList = customerService.GetCustomers();
             customerGridView.DataSource = customerList;
         }
@@ -120,7 +120,6 @@ namespace Assessment_One
 
 
             Customer customer = new Customer() { Id = customer_id, Customer_Name = txtCustomerName.Text, Customer_Address = txtCustomerAddress.Text };
-            ICustomerService customerService = new CustomerService();
             List<Customer> customerList = customerService.CreateOrUpdateCustomer(customer);
             customerGridView.DataSource = customerList;
 
@@ -165,23 +164,19 @@ namespace Assessment_One
             }
 
 
-
             if (stringToIntConversionSuccess == true && stringToDoubleConversionSuccess == true)
             {
-                invoiceStorage = InvoiceHelper.AddOrUpdate(invoiceStorage ,new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value });
+                Invoice invoice = new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value };
+                List<Invoice> invoiceList = invoiceService.CreateOrUpdateInvoice(invoice);
+                invoiceGridView.DataSource = invoiceList;
             }
+
             txtCost.Text = "$";
             txtInvoiceDescription.Text = "";
-            //txtInvoiceId.Text = (invoice_id + 1).ToString();
-
-            //invoiceGridView.DataSource = invoiceStorage;
-
-            //customerGridView.DataSource = customerBindingSource.DataSource;
-            //customerGridView.DataSource = customerStorage;
 
             ViewInvoicesForCustomer();
 
-            txtInvoiceId.Text = InvoiceHelper.GetNextId(invoiceStorage).ToString();
+            txtInvoiceId.Text = invoiceService.GetMaxInvoiceId().ToString();
 
             btnAddInvoice.Text = "Add";
         }
@@ -227,7 +222,6 @@ namespace Assessment_One
                 //Customer[] filteredCustomers = CustomerHelpers.FilterByName(customerStorage, customerSearchText);
                 //FilteredCustomers(filteredCustomers);
 
-                ICustomerService customerService = new CustomerService();
                 List<Customer> customerList = customerService.GetCustomer(customerSearchText);
                 customerGridView.DataSource = customerList;
 
@@ -236,24 +230,24 @@ namespace Assessment_One
 
         private void SearchForCustomerById()
         {
-            Customer[] filteredCustomers = CustomerHelpers.FilterByCustomerId(customerStorage, selected_customer_id);
-            FilteredCustomers(filteredCustomers);
+            List<Customer> filteredCustomers = customerService.GetCustomerById(selected_customer_id);
+            FilteredCustomer(filteredCustomers);
         }
 
-        private void FilteredCustomers(Customer[] filteredCustomers)
+        private void FilteredCustomer(List<Customer> filteredCustomer)
         {
 
-            if (filteredCustomers.Length > 0)
+            if (filteredCustomer.Count > 0)
             {
 
-                selected_customer_id = filteredCustomers[0].Id;
-                selected_customer_Name = filteredCustomers[0].Customer_Name;
+                selected_customer_id = filteredCustomer[0].Id;
+                selected_customer_Name = filteredCustomer[0].Customer_Name;
 
                 UpdateInvoiceLabels();
 
             }
 
-            customerGridView.DataSource = filteredCustomers;
+            customerGridView.DataSource = filteredCustomer;
         }
 
         private void btnInvoiceSearch_Click(object sender, EventArgs e)
@@ -261,13 +255,14 @@ namespace Assessment_One
 
             int result = 0;
 
-            Invoice[] FilteredInvoices;
+            List<Invoice> FilteredInvoices;
 
             if (int.TryParse(txtInvoiceSearch.Text, out result))
             {
-                FilteredInvoices = InvoiceHelper.FilterByInvoiceId(invoiceStorage, result);
+                FilteredInvoices = invoiceService.GetInvoicesById(result);
+                //FilteredInvoices = InvoiceHelper.FilterByInvoiceId(invoiceStorage, result);
 
-                if (FilteredInvoices.Length > 0)
+                if (FilteredInvoices.Count > 0)
                 {
                     invoice_id = FilteredInvoices[0].Id;
                     selected_customer_id = FilteredInvoices[0].Customer_Id;
@@ -296,7 +291,7 @@ namespace Assessment_One
                 txtInvoiceId.Text = invoiceGridView.Rows[e.RowIndex].Cells[0].Value.ToString();                
                 txtInvoiceDescription.Text = invoiceGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
                 txtCost.Text = invoiceGridView.Rows[e.RowIndex].Cells[3].Value.ToString();
-                dtpInvoiceDate.Value = (DateTime)invoiceGridView.Rows[e.RowIndex].Cells[4].Value;
+                //dtpInvoiceDate.Value = (DateTime)invoiceGridView.Rows[e.RowIndex].Cells[4].Value;
                 btnAddInvoice.Text = "Update";
                 btnAddInvoice.Enabled = true;
             }

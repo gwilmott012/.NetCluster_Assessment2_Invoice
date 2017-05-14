@@ -14,13 +14,14 @@ namespace InvoiceDAL.Services
     {
 
         string connectionString;
+        string commandText;
 
         public CustomerService()
         {
             connectionString = ConfigurationManager.ConnectionStrings["InvoiceConnection"].ConnectionString.ToString();
         }
 
-        List<Customer> ICustomerService.CreateOrUpdateCustomer(Customer customer)
+        public List<Customer> CreateOrUpdateCustomer(Customer customer)
         {
 
 
@@ -92,20 +93,7 @@ namespace InvoiceDAL.Services
             return ((ICustomerService)this).GetCustomers();
         }
 
-        List<Customer> ICustomerService.CustomerExists(Customer customer)
-        {
-            throw new NotImplementedException();
-        }
-
-        List<Customer> ICustomerService.DeleteCustomer(Customer customer)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
-        List<Customer> ICustomerService.GetCustomers()
+        public List<Customer> GetCustomers()
         {
             List<Customer> returnList = new List<Models.Customer>();
 
@@ -143,11 +131,51 @@ namespace InvoiceDAL.Services
 
         }
 
-        List<Customer> ICustomerService.GetCustomer(string customerName)
+        public List<Customer> GetCustomerById(int customerId)
         {
             List<Customer> returnList = new List<Models.Customer>();
 
-            string commandText = "select * from dbo.Customers where IsDeleted = 0 and Name like '%' + @Name + '%'";
+            commandText = "select Id, Cost, Description, Payment_Date, Customer_Id " +
+                "from Invoices where IsDeleted = 0 and Id = @Customer_Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(commandText, connection);
+                command.Parameters.Add("@Customer_Id", SqlDbType.Int);
+
+                command.Parameters["@Customer_Id"].Value = customerId;
+
+                SqlDataReader reader = null;
+
+                try
+                {
+                    connection.Open();
+                    reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        returnList.Add(new Customer
+                        {
+                            Id = (int)reader["Id"],
+                            Customer_Address = (string)reader["Address"],
+                            Customer_Name = (string)reader["Name"]
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+
+            return returnList;
+        }
+
+        public List<Customer> GetCustomer(string customerName)
+        {
+            List<Customer> returnList = new List<Models.Customer>();
+
+            commandText = "select * from dbo.Customers where IsDeleted = 0 and Name like '%' + @Name + '%'";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -177,21 +205,6 @@ namespace InvoiceDAL.Services
             }
 
             return returnList;
-        }
-
-        int ICustomerService.GetMaxCustomerId()
-        {
-            throw new NotImplementedException();
-        }
-
-        int ICustomerService.GetNumberOfCustomers()
-        {
-            throw new NotImplementedException();
-        }
-
-        List<Customer> ICustomerService.UpdateCustomer(Customer customer)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -10,10 +10,8 @@ namespace InvoiceDAL.Services
     public interface IInvoiceService
     {
         List<Invoice> GetCustomerInvoices(int Customer_Id);
-        List<Invoice> UpdateInvoice(Invoice invoice);
-        List<Invoice> DeleteInvoice(Invoice invoice);
         int GetMaxInvoiceId();
-        List<Invoice> InvoiceExists(Invoice invoice);
         List<Invoice> CreateOrUpdateInvoice(Invoice invoice);
+        List<Invoice> GetInvoicesById(int Customer_Id);
     }
 }

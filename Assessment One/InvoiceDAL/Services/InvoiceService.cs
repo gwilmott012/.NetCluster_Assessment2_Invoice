@@ -94,9 +94,45 @@ namespace InvoiceDAL.Services
             return ((IInvoiceService)this).GetCustomerInvoices(invoice.Customer_Id);
         }
 
-        public List<Invoice> DeleteInvoice(Invoice invoice)
+        public List<Invoice> GetInvoicesById(int Id)
         {
-            throw new NotImplementedException();
+            List<Invoice> returnList = new List<Models.Invoice>();
+
+            commandText = "select Id, Cost, Description, Payment_Date, Customer_Id, Cost " +
+                            "from Invoices where IsDeleted = 0 and Id = @Invoice_Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(commandText, connection);
+                command.Parameters.Add("@Invoice_Id", SqlDbType.Int);
+
+                command.Parameters["@Invoice_Id"].Value = Id;
+
+                SqlDataReader reader = null;
+                try
+                {
+                    connection.Open();
+                    reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        returnList.Add(new Invoice
+                        {
+                            Id = (int)reader["Id"],
+                            Costs = (double)reader["Cost"],
+                            Description = (string)reader["Description"],
+                            //Payment_Date = (DateTime)reader["Payment_Date"],
+                            Customer_Id = (int)reader["Customer_Id"]
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+
+            return returnList;
         }
 
         public List<Invoice> GetCustomerInvoices(int Customer_Id)
@@ -110,6 +146,7 @@ namespace InvoiceDAL.Services
             {
                 SqlCommand command = new SqlCommand(commandText, connection);
                 command.Parameters.Add("@Customer_Id", SqlDbType.Int);
+
                 command.Parameters["@Customer_Id"].Value = Customer_Id;
 
                 SqlDataReader reader = null;
@@ -124,9 +161,13 @@ namespace InvoiceDAL.Services
                         returnList.Add(new Invoice
                         {
                             Id = (int)reader["Id"],
-                            //Costs = (float)reader["Cost"],
+
+                            Costs = (double)reader["Cost"],
+
                             Description = (string)reader["Description"],
+
                             //Payment_Date = (DateTime)reader["Payment_Date"],
+
                             Customer_Id = (int)reader["Customer_Id"]
                         });
                     }
@@ -142,17 +183,32 @@ namespace InvoiceDAL.Services
 
         public int GetMaxInvoiceId()
         {
-            throw new NotImplementedException();
-        }
+            int returnValue = -1;
+            commandText = "Select MAX(id) + 1 as Next_Invoice_ID from Invoices";
 
-        public List<Invoice> InvoiceExists(Invoice invoice)
-        {
-            throw new NotImplementedException();
-        }
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(commandText, connection);
 
-        public List<Invoice> UpdateInvoice(Invoice invoice)
-        {
-            throw new NotImplementedException();
+                SqlDataReader reader = null;
+                try
+                {
+                    connection.Open();
+                    reader = command.ExecuteReader();
+
+                    // write each record
+                    while (reader.Read())
+                    {
+                        returnValue = (int)reader["Next_Invoice_ID"];
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Console.WriteLine(ex.Message);
+                }
+            }
+
+            return returnValue;
         }
     }
 }
