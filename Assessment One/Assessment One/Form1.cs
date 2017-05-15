@@ -41,6 +41,7 @@ namespace Assessment_One
                 btnAddInvoice.Enabled = true;
                 selected_customer_id = (int)customerGridView.Rows[e.RowIndex].Cells[0].Value;
                 selected_customer_Name = (string)customerGridView.Rows[e.RowIndex].Cells[1].Value;
+
                 ViewInvoicesForCustomer();
             }
             else if (customerGridView.Columns[e.ColumnIndex].Name == "Edit")
@@ -56,9 +57,17 @@ namespace Assessment_One
 
         private void ViewInvoicesForCustomer()
         {
+            try
+            {
+                lblErrorReport.Text = string.Empty;
+                List<Invoice> invoiceList = invoiceService.GetCustomerInvoices(selected_customer_id);
+                invoiceGridView.DataSource = invoiceList;
+            }
+            catch (Exception ex)
+            {
+                lblErrorReport.Text = ex.Message;
+            }
 
-            List<Invoice> invoiceList = invoiceService.GetCustomerInvoices(selected_customer_id);
-            invoiceGridView.DataSource = invoiceList;
         }
 
         private void UpdateInvoiceLabels()
@@ -73,10 +82,19 @@ namespace Assessment_One
 
             InitializeInvoices();
 
+            lblErrorReport.Text = string.Empty;
 
-            //txtCustomerId.Text = CustomerHelpers.GetNextId(customerStorage).ToString();
+            try
+            {
+                lblErrorReport.Text = string.Empty;
+                txtCustomerId.Text = customerService.GetMaxCustomerId().ToString();
 
-            txtInvoiceId.Text = invoiceService.GetMaxInvoiceId().ToString();
+                txtInvoiceId.Text = invoiceService.GetMaxInvoiceId().ToString();
+            }
+            catch (Exception ex)
+            {
+                lblErrorReport.Text = ex.Message;
+            }
 
             dtpInvoiceDate.Value = DateTime.Now.AddDays(14).Date;
 
@@ -89,8 +107,17 @@ namespace Assessment_One
 
         private void InitializeCustomers()
         {
-            List<Customer> customerList = customerService.GetCustomers();
-            customerGridView.DataSource = customerList;
+            try
+            {
+                lblErrorReport.Text = string.Empty;
+                List<Customer> customerList = customerService.GetCustomers();
+                customerGridView.DataSource = customerList;
+
+            }
+            catch (Exception ex)
+            {
+                lblErrorReport.Text = ex.Message;
+            }
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)
@@ -119,23 +146,41 @@ namespace Assessment_One
             }
 
 
-            Customer customer = new Customer() { Id = customer_id, Customer_Name = txtCustomerName.Text, Customer_Address = txtCustomerAddress.Text };
-            List<Customer> customerList = customerService.CreateOrUpdateCustomer(customer);
-            customerGridView.DataSource = customerList;
+            try
+            {
+                lblErrorReport.Text = string.Empty;
+                if (btnAddCustomer.Text == "Update")
+                {
+                    Customer customer = new Customer() { Id = customer_id, Customer_Name = txtCustomerName.Text, Customer_Address = txtCustomerAddress.Text, CreateOrUpdate = false };
+                    List<Customer> customerList = customerService.CreateOrUpdateCustomer(customer);
+                    customerGridView.DataSource = customerList;
+                }
+                else
+                {
+                    Customer customer = new Customer() { Id = customer_id, Customer_Name = txtCustomerName.Text, Customer_Address = txtCustomerAddress.Text, CreateOrUpdate = true };
+                    List<Customer> customerList = customerService.CreateOrUpdateCustomer(customer);
+                    customerGridView.DataSource = customerList;
+                }
 
 
-            txtCustomerName.Text = "";
-            txtCustomerAddress.Text = "";
-            txtCustomerId.Text = "";
 
-            btnAddCustomer.Text = "Add";
+
+                txtCustomerName.Text = "";
+                txtCustomerAddress.Text = "";
+                txtCustomerId.Text = customerService.GetMaxCustomerId().ToString();
+
+                btnAddCustomer.Text = "Add";
+            }
+            catch (Exception ex)
+            {
+                //In here we should catch the exception
+                lblErrorReport.Text = ex.Message;
+
+            }
         }
 
         private void btnAddInvoice_Click(object sender, EventArgs e)
         {
-
-
-
             int invoice_id = 0;
             bool stringToIntConversionSuccess = false;
             stringToIntConversionSuccess = int.TryParse(txtInvoiceId.Text, out invoice_id);
@@ -163,22 +208,36 @@ namespace Assessment_One
 
             }
 
-
-            if (stringToIntConversionSuccess == true && stringToDoubleConversionSuccess == true)
+            try
             {
-                Invoice invoice = new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value };
-                List<Invoice> invoiceList = invoiceService.CreateOrUpdateInvoice(invoice);
-                invoiceGridView.DataSource = invoiceList;
+                lblErrorReport.Text = string.Empty;
+                if (stringToIntConversionSuccess == true && stringToDoubleConversionSuccess == true && btnAddInvoice.Text == "Add")
+                {
+                    Invoice invoice = new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value.Date, CreateOrUpdate = true };
+                    List<Invoice> invoiceList = invoiceService.CreateOrUpdateInvoice(invoice);
+                    invoiceGridView.DataSource = invoiceList;
+                }
+                else if (stringToIntConversionSuccess == true && stringToDoubleConversionSuccess == true && btnAddInvoice.Text == "Update")
+                {
+                    Invoice invoice = new Invoice() { Id = invoice_id, Customer_Id = selected_customer_id, Description = txtInvoiceDescription.Text, Costs = invoice_cost, Payment_Date = dtpInvoiceDate.Value.Date, CreateOrUpdate = false };
+                    List<Invoice> invoiceList = invoiceService.CreateOrUpdateInvoice(invoice);
+                    invoiceGridView.DataSource = invoiceList;
+                }
+
+                txtCost.Text = "$";
+                txtInvoiceDescription.Text = "";
+
+                ViewInvoicesForCustomer();
+
+                txtInvoiceId.Text = invoiceService.GetMaxInvoiceId().ToString();
+
+                btnAddInvoice.Text = "Add";
+
             }
-
-            txtCost.Text = "$";
-            txtInvoiceDescription.Text = "";
-
-            ViewInvoicesForCustomer();
-
-            txtInvoiceId.Text = invoiceService.GetMaxInvoiceId().ToString();
-
-            btnAddInvoice.Text = "Add";
+            catch (Exception ex)
+            {
+                lblErrorReport.Text = ex.Message;
+            }
         }
 
        
@@ -211,27 +270,45 @@ namespace Assessment_One
 
         private void btnCustomerSearch_Click(object sender, EventArgs e)
         {
-            string customerSearchText = txtCustomerSearch.Text;
-
-            if (customerSearchText == string.Empty)
+            try
             {
-                MessageBox.Show("Please search a valid customer");
+                lblErrorReport.Text = string.Empty;
+                string customerSearchText = txtCustomerSearch.Text;
+
+                if (customerSearchText == string.Empty)
+                {
+                    MessageBox.Show("Please search a valid customer");
+                }
+                else
+                {
+                    //Customer[] filteredCustomers = CustomerHelpers.FilterByName(customerStorage, customerSearchText);
+                    //FilteredCustomers(filteredCustomers);
+
+                    List<Customer> customerList = customerService.GetCustomer(customerSearchText);
+                    customerGridView.DataSource = customerList;
+
+                }
             }
-            else
+
+            catch (Exception ex)
             {
-                //Customer[] filteredCustomers = CustomerHelpers.FilterByName(customerStorage, customerSearchText);
-                //FilteredCustomers(filteredCustomers);
-
-                List<Customer> customerList = customerService.GetCustomer(customerSearchText);
-                customerGridView.DataSource = customerList;
-
+                lblErrorReport.Text = ex.Message;
             }
         }
 
         private void SearchForCustomerById()
         {
-            List<Customer> filteredCustomers = customerService.GetCustomerById(selected_customer_id);
-            FilteredCustomer(filteredCustomers);
+            try
+            {
+                lblErrorReport.Text = string.Empty;
+                List<Customer> filteredCustomers = customerService.GetCustomerById(selected_customer_id);
+                FilteredCustomer(filteredCustomers);
+
+            }
+            catch (Exception ex)
+            {
+                lblErrorReport.Text = ex.Message;
+            }
         }
 
         private void FilteredCustomer(List<Customer> filteredCustomer)
@@ -253,34 +330,42 @@ namespace Assessment_One
         private void btnInvoiceSearch_Click(object sender, EventArgs e)
         {
 
-            int result = 0;
-
-            List<Invoice> FilteredInvoices;
-
-            if (int.TryParse(txtInvoiceSearch.Text, out result))
+            try
             {
-                FilteredInvoices = invoiceService.GetInvoicesById(result);
-                //FilteredInvoices = InvoiceHelper.FilterByInvoiceId(invoiceStorage, result);
+                lblErrorReport.Text = string.Empty;
+                int result = 0;
 
-                if (FilteredInvoices.Count > 0)
+                List<Invoice> FilteredInvoices;
+
+                if (int.TryParse(txtInvoiceSearch.Text, out result))
                 {
-                    invoice_id = FilteredInvoices[0].Id;
-                    selected_customer_id = FilteredInvoices[0].Customer_Id;
-                    selected_customer_Name = string.Empty;
+                    FilteredInvoices = invoiceService.GetInvoicesById(result);
+                    //FilteredInvoices = InvoiceHelper.FilterByInvoiceId(invoiceStorage, result);
 
-                    SearchForCustomerById();
+                    if (FilteredInvoices.Count > 0)
+                    {
+                        invoice_id = FilteredInvoices[0].Id;
+                        selected_customer_id = FilteredInvoices[0].Customer_Id;
+                        selected_customer_Name = string.Empty;
 
+                        SearchForCustomerById();
+
+                    }
+
+                    invoiceGridView.DataSource = FilteredInvoices;
+                }
+                else
+                {
+                    MessageBox.Show("enter an integer");
                 }
 
-                invoiceGridView.DataSource = FilteredInvoices;
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("enter an integer");
+                lblErrorReport.Text = ex.Message;
             }
-            
 
-            
+
         }
 
         private void invoiceGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -291,7 +376,7 @@ namespace Assessment_One
                 txtInvoiceId.Text = invoiceGridView.Rows[e.RowIndex].Cells[0].Value.ToString();                
                 txtInvoiceDescription.Text = invoiceGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
                 txtCost.Text = invoiceGridView.Rows[e.RowIndex].Cells[3].Value.ToString();
-                //dtpInvoiceDate.Value = (DateTime)invoiceGridView.Rows[e.RowIndex].Cells[4].Value;
+                dtpInvoiceDate.Value = (DateTime)invoiceGridView.Rows[e.RowIndex].Cells[4].Value;
                 btnAddInvoice.Text = "Update";
                 btnAddInvoice.Enabled = true;
             }

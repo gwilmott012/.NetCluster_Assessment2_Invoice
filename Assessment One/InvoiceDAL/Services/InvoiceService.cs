@@ -14,9 +14,11 @@ namespace InvoiceDAL.Services
     {
         string commandText;
         string connectionString;
+        string errorMessage;
 
         public InvoiceService()
         {
+            errorMessage = ConfigurationManager.AppSettings["databaseErrorMessage"];
             connectionString = ConfigurationManager.ConnectionStrings["InvoiceConnection"].ConnectionString.ToString();
         }
 
@@ -24,7 +26,7 @@ namespace InvoiceDAL.Services
         {
             int numberRowsAdded;
 
-            if (invoice.Id == 0)
+            if (invoice.CreateOrUpdate == true)
             {
                 //This is a new invoice as the id is zero
                 commandText = "Insert into dbo.Invoices (Customer_Id, Description, Cost, Payment_Date)" +
@@ -32,25 +34,26 @@ namespace InvoiceDAL.Services
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand(commandText, connection);
-                    command.Parameters.Add("@Customer_Id", SqlDbType.Int);
-                    command.Parameters.Add("@Description", SqlDbType.VarChar);
-                    command.Parameters.Add("@Cost", SqlDbType.Float);
-                    command.Parameters.Add("@Payment_Date", SqlDbType.Date);
-
-                    command.Parameters["Customer_Id"].Value = invoice.Customer_Id;
-                    command.Parameters["Description"].Value = invoice.Description;
-                    command.Parameters["Cost"].Value = invoice.Costs;
-                    command.Parameters["Payment_Date"].Value = invoice.Payment_Date;
-
                     try
                     {
+                        SqlCommand command = new SqlCommand(commandText, connection);
+                        command.Parameters.Add("@Customer_Id", SqlDbType.Int);
+                        command.Parameters.Add("@Description", SqlDbType.VarChar);
+                        command.Parameters.Add("@Cost", SqlDbType.Float);
+                        command.Parameters.Add("@Payment_Date", SqlDbType.Date);
+
+                        command.Parameters["@Customer_Id"].Value = invoice.Customer_Id;
+                        command.Parameters["@Description"].Value = invoice.Description;
+                        command.Parameters["@Cost"].Value = invoice.Costs;
+                        command.Parameters["@Payment_Date"].Value = invoice.Payment_Date;
+
+
                         connection.Open();
                         numberRowsAdded = command.ExecuteNonQuery();
                     }
                     catch (Exception ex)
                     {
-                        //Console.WriteLine(ex.Message);
+                        throw (new Exception(errorMessage, ex));
                     }
                 }
             }
@@ -66,6 +69,8 @@ namespace InvoiceDAL.Services
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
+                    try
+                    {
                     SqlCommand command = new SqlCommand(commandText, connection);
                     command.Parameters.Add("@Id", SqlDbType.Int);
                     command.Parameters.Add("@Customer_Id", SqlDbType.Int);
@@ -73,20 +78,19 @@ namespace InvoiceDAL.Services
                     command.Parameters.Add("@Cost", SqlDbType.Float);
                     command.Parameters.Add("@Payment_Date", SqlDbType.Date);
 
-                    command.Parameters["Id"].Value = invoice.Id;
-                    command.Parameters["Customer_Id"].Value = invoice.Customer_Id;
-                    command.Parameters["Description"].Value = invoice.Description;
-                    command.Parameters["Cost"].Value = invoice.Costs;
-                    command.Parameters["Payment_Date"].Value = invoice.Payment_Date;
+                    command.Parameters["@Id"].Value = invoice.Id;
+                    command.Parameters["@Customer_Id"].Value = invoice.Customer_Id;
+                    command.Parameters["@Description"].Value = invoice.Description;
+                    command.Parameters["@Cost"].Value = invoice.Costs;
+                    command.Parameters["@Payment_Date"].Value = invoice.Payment_Date;
 
-                    try
-                    {
+                    
                         connection.Open();
                         numberRowsAdded = command.ExecuteNonQuery();
                     }
                     catch (Exception ex)
                     {
-
+                        throw (new Exception(errorMessage, ex));
                     }
                 }
             }
@@ -103,14 +107,15 @@ namespace InvoiceDAL.Services
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                try
+                {
                 SqlCommand command = new SqlCommand(commandText, connection);
                 command.Parameters.Add("@Invoice_Id", SqlDbType.Int);
 
                 command.Parameters["@Invoice_Id"].Value = Id;
 
                 SqlDataReader reader = null;
-                try
-                {
+                
                     connection.Open();
                     reader = command.ExecuteReader();
 
@@ -121,14 +126,14 @@ namespace InvoiceDAL.Services
                             Id = (int)reader["Id"],
                             Costs = (double)reader["Cost"],
                             Description = (string)reader["Description"],
-                            //Payment_Date = (DateTime)reader["Payment_Date"],
+                            Payment_Date = Convert.ToDateTime(reader["Payment_Date"]),
                             Customer_Id = (int)reader["Customer_Id"]
                         });
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    throw (new Exception(errorMessage, ex));
                 }
             }
 
@@ -144,14 +149,15 @@ namespace InvoiceDAL.Services
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                try
+                { 
                 SqlCommand command = new SqlCommand(commandText, connection);
                 command.Parameters.Add("@Customer_Id", SqlDbType.Int);
 
                 command.Parameters["@Customer_Id"].Value = Customer_Id;
 
                 SqlDataReader reader = null;
-                try
-                {
+
                     connection.Open();
                     reader = command.ExecuteReader();
 
@@ -166,7 +172,7 @@ namespace InvoiceDAL.Services
 
                             Description = (string)reader["Description"],
 
-                            //Payment_Date = (DateTime)reader["Payment_Date"],
+                            Payment_Date = Convert.ToDateTime(reader["Payment_Date"]),
 
                             Customer_Id = (int)reader["Customer_Id"]
                         });
@@ -174,7 +180,7 @@ namespace InvoiceDAL.Services
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine(ex.Message);
+                    throw (new Exception(errorMessage, ex));
                 }
             }
 
@@ -188,11 +194,12 @@ namespace InvoiceDAL.Services
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                try
+                {
                 SqlCommand command = new SqlCommand(commandText, connection);
 
                 SqlDataReader reader = null;
-                try
-                {
+                
                     connection.Open();
                     reader = command.ExecuteReader();
 
@@ -204,7 +211,7 @@ namespace InvoiceDAL.Services
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine(ex.Message);
+                    throw (new Exception(errorMessage, ex));
                 }
             }
 

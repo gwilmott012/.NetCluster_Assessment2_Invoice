@@ -13,5 +13,6 @@ namespace InvoiceDAL.Models
         public string Description { get; set; }
         public double Costs { get; set; }
         public DateTime Payment_Date { get; set; }
+        public bool CreateOrUpdate { get; set; }
     }
 }

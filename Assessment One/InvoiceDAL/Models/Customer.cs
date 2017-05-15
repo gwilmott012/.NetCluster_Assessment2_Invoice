@@ -11,5 +11,6 @@ namespace InvoiceDAL.Models
         public int Id { get; set; }
         public string Customer_Name { get; set; }
         public string Customer_Address { get; set; }
+        public bool CreateOrUpdate { get; set; }
     }
 }

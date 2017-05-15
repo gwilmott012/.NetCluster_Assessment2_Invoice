@@ -15,9 +15,11 @@ namespace InvoiceDAL.Services
 
         string connectionString;
         string commandText;
+        string errorMessage;
 
         public CustomerService()
         {
+            errorMessage = ConfigurationManager.AppSettings["databaseErrorMessage"];
             connectionString = ConfigurationManager.ConnectionStrings["InvoiceConnection"].ConnectionString.ToString();
         }
 
@@ -27,7 +29,7 @@ namespace InvoiceDAL.Services
 
             string commandText;
 
-            if (customer.Id == 0)
+            if (customer.CreateOrUpdate == true)
             {
                 //This is a new customer as the id is zero
                 commandText = "Insert into dbo.Customers (Name, [Address]) " +
@@ -35,22 +37,22 @@ namespace InvoiceDAL.Services
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand(commandText, connection);
-                    command.Parameters.Add("@Name", SqlDbType.VarChar);
-                    command.Parameters.Add("@Address", SqlDbType.VarChar);
-
-                    command.Parameters["@Name"].Value = customer.Customer_Name;
-                    command.Parameters["@Address"].Value = customer.Customer_Address;
-
                     try
                     {
+                        SqlCommand command = new SqlCommand(commandText, connection);
+                        command.Parameters.Add("@Name", SqlDbType.VarChar);
+                        command.Parameters.Add("@Address", SqlDbType.VarChar);
+
+                        command.Parameters["@Name"].Value = customer.Customer_Name;
+                        command.Parameters["@Address"].Value = customer.Customer_Address;
+
                         connection.Open();
                         int numberRowsAdded = command.ExecuteNonQuery();
 
                     }
                     catch (Exception ex)
                     {
-                        //Console.WriteLine(ex.Message);
+                        throw (new Exception(errorMessage, ex));
                     }
 
                 }
@@ -65,26 +67,22 @@ namespace InvoiceDAL.Services
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand(commandText, connection);
-                    command.Parameters.Add("@Id", SqlDbType.Int);
-                    command.Parameters.Add("@Name", SqlDbType.VarChar);
-                    command.Parameters.Add("@Address", SqlDbType.VarChar);
-
-                    command.Parameters["@Id"].Value = customer.Id;
-                    command.Parameters["@Name"].Value = customer.Customer_Name;
-                    command.Parameters["@Address"].Value = customer.Customer_Address;
-
                     try
                     {
-                        connection.Open();
-                        int numberRowsAdded = command.ExecuteNonQuery();
+                        SqlCommand command = new SqlCommand(commandText, connection);
+                        command.Parameters.Add("@Id", SqlDbType.Int);
+                        command.Parameters.Add("@Name", SqlDbType.VarChar);
+                        command.Parameters.Add("@Address", SqlDbType.VarChar);
+
+                        command.Parameters["@Id"].Value = customer.Id;
+                        command.Parameters["@Name"].Value = customer.Customer_Name;
+                        command.Parameters["@Address"].Value = customer.Customer_Address;
 
                     }
                     catch (Exception ex)
                     {
-                        //Console.WriteLine(ex.Message);
+                        throw (new Exception(errorMessage, ex));
                     }
-
                 }
 
 
@@ -122,7 +120,7 @@ namespace InvoiceDAL.Services
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine(ex.Message);
+                    throw (new Exception(errorMessage, ex));
                 }
 
             }
@@ -135,11 +133,13 @@ namespace InvoiceDAL.Services
         {
             List<Customer> returnList = new List<Models.Customer>();
 
-            commandText = "select Id, Cost, Description, Payment_Date, Customer_Id " +
-                "from Invoices where IsDeleted = 0 and Id = @Customer_Id";
+            commandText = "select Id, Name, Address " +
+                "from Customers where IsDeleted = 0 and Id = @Customer_Id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                try
+                {
                 SqlCommand command = new SqlCommand(commandText, connection);
                 command.Parameters.Add("@Customer_Id", SqlDbType.Int);
 
@@ -147,8 +147,6 @@ namespace InvoiceDAL.Services
 
                 SqlDataReader reader = null;
 
-                try
-                {
                     connection.Open();
                     reader = command.ExecuteReader();
 
@@ -162,9 +160,9 @@ namespace InvoiceDAL.Services
                         });
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    throw (new Exception(errorMessage, ex));
                 }
             }
 
@@ -179,14 +177,15 @@ namespace InvoiceDAL.Services
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                try
+                {
                 SqlCommand command = new SqlCommand(commandText, connection);
                 command.Parameters.Add("@Name", SqlDbType.VarChar);
                 command.Parameters["@Name"].Value = customerName;
 
 
                 SqlDataReader reader = null;
-                try
-                {
+                
                     connection.Open();
                     reader = command.ExecuteReader();
 
@@ -199,12 +198,42 @@ namespace InvoiceDAL.Services
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine(ex.Message);
+                    throw (new Exception(errorMessage, ex));
                 }
 
             }
 
             return returnList;
+        }
+
+        public int GetMaxCustomerId()
+        {
+            int returnValue = -1;
+            commandText = "Select MAX(id) + 1 as Next_Customer_ID from Customers";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(commandText, connection);
+
+                SqlDataReader reader = null;
+                try
+                {
+                    connection.Open();
+                    reader = command.ExecuteReader();
+
+                    // write each record
+                    while (reader.Read())
+                    {
+                        returnValue = (int)reader["Next_Customer_ID"];
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw (new Exception(errorMessage, ex));
+                }
+            }
+
+            return returnValue;
         }
     }
 }
