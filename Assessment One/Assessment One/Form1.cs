@@ -1,6 +1,4 @@
-﻿
-using Assessment_One.Helpers;
-using InvoiceDAL.Models;
+﻿using InvoiceDAL.Models;
 using InvoiceDAL.Services;
 using System;
 using System.Collections.Generic;
@@ -13,40 +11,31 @@ namespace Assessment_One
     public partial class Form1 : Form
     {
 
-
-        //Arrays to store Customers and Invoices
-        //Customer[] customerStorage = new Customer[1];
-        //Invoice[] invoiceStorage = new Invoice[1];
-
-
-        //Key varibales for searching
+        //Key variables for searching
         int selected_customer_id;
         string selected_customer_Name;
         int invoice_id;
         IInvoiceService invoiceService = new InvoiceService();
         ICustomerService customerService = new CustomerService();
 
-
         public Form1()
         {
             InitializeComponent();
         }
 
-
-
         private void ViewInvoices_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (customerGridView.Columns[e.ColumnIndex].Name == "Invoice")
-            {
+            {        
+                //code to view selected customers invoices
                 btnAddInvoice.Enabled = true;
                 selected_customer_id = (int)customerGridView.Rows[e.RowIndex].Cells[0].Value;
                 selected_customer_Name = (string)customerGridView.Rows[e.RowIndex].Cells[1].Value;
-
                 ViewInvoicesForCustomer();
             }
             else if (customerGridView.Columns[e.ColumnIndex].Name == "Edit")
             {
-
+                //code to edit selected customer
                 txtCustomerId.Text = customerGridView.Rows[e.RowIndex].Cells[0].Value.ToString();
                 txtCustomerName.Text = customerGridView.Rows[e.RowIndex].Cells[1].Value.ToString();
                 txtCustomerAddress.Text = customerGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
@@ -54,11 +43,11 @@ namespace Assessment_One
             }
         }
 
-
         private void ViewInvoicesForCustomer()
         {
             try
             {
+                //gets invoices for selected customer and puts invoices in grid view
                 lblErrorReport.Text = string.Empty;
                 List<Invoice> invoiceList = invoiceService.GetCustomerInvoices(selected_customer_id);
                 invoiceGridView.DataSource = invoiceList;
@@ -72,12 +61,14 @@ namespace Assessment_One
 
         private void UpdateInvoiceLabels()
         {
+            // Updates invoice labels
             lblInvoiceList.Text = "Invoices for " + selected_customer_Name;
             lblNewInvoice.Text = "New invoice for " + selected_customer_Name;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Gets and initializes customers
             InitializeCustomers();
 
             InitializeInvoices();
@@ -88,7 +79,7 @@ namespace Assessment_One
             {
                 lblErrorReport.Text = string.Empty;
                 txtCustomerId.Text = customerService.GetMaxCustomerId().ToString();
-
+                // sets text in customer and invoice id textbox to next id
                 txtInvoiceId.Text = invoiceService.GetMaxInvoiceId().ToString();
             }
             catch (Exception ex)
@@ -109,6 +100,7 @@ namespace Assessment_One
         {
             try
             {
+                // code to get customers from database
                 lblErrorReport.Text = string.Empty;
                 List<Customer> customerList = customerService.GetCustomers();
                 customerGridView.DataSource = customerList;
@@ -148,6 +140,7 @@ namespace Assessment_One
 
             try
             {
+                // inputs customer to database
                 lblErrorReport.Text = string.Empty;
                 if (btnAddCustomer.Text == "Update")
                 {
@@ -281,12 +274,8 @@ namespace Assessment_One
                 }
                 else
                 {
-                    //Customer[] filteredCustomers = CustomerHelpers.FilterByName(customerStorage, customerSearchText);
-                    //FilteredCustomers(filteredCustomers);
-
                     List<Customer> customerList = customerService.GetCustomer(customerSearchText);
                     customerGridView.DataSource = customerList;
-
                 }
             }
 
@@ -303,7 +292,6 @@ namespace Assessment_One
                 lblErrorReport.Text = string.Empty;
                 List<Customer> filteredCustomers = customerService.GetCustomerById(selected_customer_id);
                 FilteredCustomer(filteredCustomers);
-
             }
             catch (Exception ex)
             {
@@ -321,7 +309,6 @@ namespace Assessment_One
                 selected_customer_Name = filteredCustomer[0].Customer_Name;
 
                 UpdateInvoiceLabels();
-
             }
 
             customerGridView.DataSource = filteredCustomer;
@@ -340,13 +327,13 @@ namespace Assessment_One
                 if (int.TryParse(txtInvoiceSearch.Text, out result))
                 {
                     FilteredInvoices = invoiceService.GetInvoicesById(result);
-                    //FilteredInvoices = InvoiceHelper.FilterByInvoiceId(invoiceStorage, result);
 
                     if (FilteredInvoices.Count > 0)
                     {
                         invoice_id = FilteredInvoices[0].Id;
                         selected_customer_id = FilteredInvoices[0].Customer_Id;
                         selected_customer_Name = string.Empty;
+
 
                         SearchForCustomerById();
 
@@ -372,13 +359,25 @@ namespace Assessment_One
         {
             if (invoiceGridView.Columns[e.ColumnIndex].Name == "EditInvoice")
             {
-
-                txtInvoiceId.Text = invoiceGridView.Rows[e.RowIndex].Cells[0].Value.ToString();                
+                // code to edit selected invoice 
+                txtInvoiceId.Text = invoiceGridView.Rows[e.RowIndex].Cells[0].Value.ToString();
                 txtInvoiceDescription.Text = invoiceGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
                 txtCost.Text = invoiceGridView.Rows[e.RowIndex].Cells[3].Value.ToString();
                 dtpInvoiceDate.Value = (DateTime)invoiceGridView.Rows[e.RowIndex].Cells[4].Value;
                 btnAddInvoice.Text = "Update";
                 btnAddInvoice.Enabled = true;
+            }
+            else if (invoiceGridView.Columns[e.ColumnIndex].Name == "DeleteInvoice")
+            {
+                // code to delete selected invoice
+                if (MessageBox.Show("Are you sure you want to delete this invoice?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    int Invoice_Id = Convert.ToInt32(invoiceGridView.Rows[e.RowIndex].Cells[0].Value);
+
+                    invoiceService.DeleteInvoiceById(Invoice_Id);
+                    List<Invoice> FilteredInvoices = invoiceService.GetInvoicesById(Invoice_Id);
+                    invoiceGridView.DataSource = FilteredInvoices;
+                }
             }
         }
 

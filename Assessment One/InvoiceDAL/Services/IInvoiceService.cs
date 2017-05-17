@@ -1,9 +1,5 @@
 ﻿using InvoiceDAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InvoiceDAL.Services
 {
@@ -13,5 +9,7 @@ namespace InvoiceDAL.Services
         int GetMaxInvoiceId();
         List<Invoice> CreateOrUpdateInvoice(Invoice invoice);
         List<Invoice> GetInvoicesById(int Customer_Id);
+        void DeleteInvoiceById(int Id);
+
     }
 }

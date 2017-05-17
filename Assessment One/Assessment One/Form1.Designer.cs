@@ -30,11 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.customerGridView = new System.Windows.Forms.DataGridView();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Customer_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.customerAddressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Invoice = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.customerBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.txtCustomerId = new System.Windows.Forms.TextBox();
@@ -61,6 +56,7 @@
             this.costsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Payment_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EditInvoice = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.DeleteInvoice = new System.Windows.Forms.DataGridViewButtonColumn();
             this.invoiceBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.txtInvoiceId = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -77,6 +73,11 @@
             this.txtInvoiceSearch = new System.Windows.Forms.TextBox();
             this.btnInvoiceSearch = new System.Windows.Forms.Button();
             this.lblErrorReport = new System.Windows.Forms.Label();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Customer_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.customerAddressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Invoice = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.customerGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.customerBindingSource)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -101,47 +102,6 @@
             this.customerGridView.Size = new System.Drawing.Size(634, 150);
             this.customerGridView.TabIndex = 0;
             this.customerGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ViewInvoices_CellContentClick);
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.idDataGridViewTextBoxColumn.HeaderText = "Customer Id";
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn.Width = 75;
-            // 
-            // Customer_Name
-            // 
-            this.Customer_Name.DataPropertyName = "Customer_Name";
-            this.Customer_Name.HeaderText = "Customer Name";
-            this.Customer_Name.Name = "Customer_Name";
-            this.Customer_Name.ReadOnly = true;
-            // 
-            // customerAddressDataGridViewTextBoxColumn
-            // 
-            this.customerAddressDataGridViewTextBoxColumn.DataPropertyName = "Customer_Address";
-            this.customerAddressDataGridViewTextBoxColumn.HeaderText = "Customer Address";
-            this.customerAddressDataGridViewTextBoxColumn.Name = "customerAddressDataGridViewTextBoxColumn";
-            this.customerAddressDataGridViewTextBoxColumn.ReadOnly = true;
-            this.customerAddressDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // Invoice
-            // 
-            this.Invoice.HeaderText = "";
-            this.Invoice.Name = "Invoice";
-            this.Invoice.ReadOnly = true;
-            this.Invoice.Text = "View Invoices";
-            this.Invoice.UseColumnTextForButtonValue = true;
-            this.Invoice.Width = 125;
-            // 
-            // Edit
-            // 
-            this.Edit.HeaderText = "";
-            this.Edit.Name = "Edit";
-            this.Edit.ReadOnly = true;
-            this.Edit.Text = "Edit";
-            this.Edit.UseColumnTextForButtonValue = true;
-            this.Edit.Width = 125;
             // 
             // customerBindingSource
             // 
@@ -308,7 +268,8 @@
             this.descriptionDataGridViewTextBoxColumn,
             this.costsDataGridViewTextBoxColumn,
             this.Payment_Date,
-            this.EditInvoice});
+            this.EditInvoice,
+            this.DeleteInvoice});
             this.invoiceGridView.DataSource = this.invoiceBindingSource;
             this.invoiceGridView.Location = new System.Drawing.Point(182, 361);
             this.invoiceGridView.Name = "invoiceGridView";
@@ -321,6 +282,7 @@
             this.idDataGridViewTextBoxColumn1.DataPropertyName = "Id";
             this.idDataGridViewTextBoxColumn1.HeaderText = "Invoice Id";
             this.idDataGridViewTextBoxColumn1.Name = "idDataGridViewTextBoxColumn1";
+            this.idDataGridViewTextBoxColumn1.Width = 75;
             // 
             // customerIdDataGridViewTextBoxColumn
             // 
@@ -334,7 +296,7 @@
             this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
             this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
             this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            this.descriptionDataGridViewTextBoxColumn.Width = 150;
+            this.descriptionDataGridViewTextBoxColumn.Width = 115;
             // 
             // costsDataGridViewTextBoxColumn
             // 
@@ -358,6 +320,16 @@
             this.EditInvoice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.EditInvoice.Text = "Edit";
             this.EditInvoice.UseColumnTextForButtonValue = true;
+            this.EditInvoice.Width = 95;
+            // 
+            // DeleteInvoice
+            // 
+            this.DeleteInvoice.HeaderText = "";
+            this.DeleteInvoice.Name = "DeleteInvoice";
+            this.DeleteInvoice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.DeleteInvoice.Text = "Delete";
+            this.DeleteInvoice.UseColumnTextForButtonValue = true;
+            this.DeleteInvoice.Width = 95;
             // 
             // invoiceBindingSource
             // 
@@ -492,6 +464,47 @@
             this.lblErrorReport.TabIndex = 26;
             this.lblErrorReport.Text = "lblErrorReport";
             // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Customer Id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn.Width = 75;
+            // 
+            // Customer_Name
+            // 
+            this.Customer_Name.DataPropertyName = "Customer_Name";
+            this.Customer_Name.HeaderText = "Customer Name";
+            this.Customer_Name.Name = "Customer_Name";
+            this.Customer_Name.ReadOnly = true;
+            // 
+            // customerAddressDataGridViewTextBoxColumn
+            // 
+            this.customerAddressDataGridViewTextBoxColumn.DataPropertyName = "Customer_Address";
+            this.customerAddressDataGridViewTextBoxColumn.HeaderText = "Customer Address";
+            this.customerAddressDataGridViewTextBoxColumn.Name = "customerAddressDataGridViewTextBoxColumn";
+            this.customerAddressDataGridViewTextBoxColumn.ReadOnly = true;
+            this.customerAddressDataGridViewTextBoxColumn.Width = 125;
+            // 
+            // Invoice
+            // 
+            this.Invoice.HeaderText = "";
+            this.Invoice.Name = "Invoice";
+            this.Invoice.ReadOnly = true;
+            this.Invoice.Text = "View Invoices";
+            this.Invoice.UseColumnTextForButtonValue = true;
+            this.Invoice.Width = 95;
+            // 
+            // Edit
+            // 
+            this.Edit.HeaderText = "";
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            this.Edit.Text = "Edit";
+            this.Edit.UseColumnTextForButtonValue = true;
+            this.Edit.Width = 95;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -582,18 +595,19 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtInvoiceSearch;
         private System.Windows.Forms.Button btnInvoiceSearch;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Customer_Name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn customerAddressDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewButtonColumn Invoice;
-        private System.Windows.Forms.DataGridViewButtonColumn Edit;
+        private System.Windows.Forms.Label lblErrorReport;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn customerIdDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn costsDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Payment_Date;
         private System.Windows.Forms.DataGridViewButtonColumn EditInvoice;
-        private System.Windows.Forms.Label lblErrorReport;
+        private System.Windows.Forms.DataGridViewButtonColumn DeleteInvoice;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Customer_Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn customerAddressDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewButtonColumn Invoice;
+        private System.Windows.Forms.DataGridViewButtonColumn Edit;
     }
 }
 

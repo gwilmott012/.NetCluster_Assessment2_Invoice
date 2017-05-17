@@ -1,12 +1,9 @@
-﻿using System;
+﻿using InvoiceDAL.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InvoiceDAL.Models;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace InvoiceDAL.Services
 {
@@ -235,5 +232,35 @@ namespace InvoiceDAL.Services
 
             return returnValue;
         }
+
+        public void DeleteCustomerById(int customerId)
+        {
+            int numberRowsAdded;
+
+            commandText = "Update Customers " +
+                            "Set IsDeleted = 1" +
+                            "Where Id = @Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(commandText, connection);
+                    command.Parameters.Add("@Id", SqlDbType.Int);
+
+                    command.Parameters["@Id"].Value = customerId;
+
+                    connection.Open();
+                    numberRowsAdded = command.ExecuteNonQuery();
+
+
+                }
+                catch (Exception ex)
+                {
+                    throw (new Exception(errorMessage, ex));
+                }
+            }
+        }
+
     }
 }
